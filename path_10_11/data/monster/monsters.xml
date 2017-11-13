@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <monsters>
-    <!-- NOSTALGIA -->		
-	<monster file="Nostalgia/old_bear.xml" name="BearOld"/>
-	<monster file="Nostalgia/old_bonelord.xml" name="BonelordOld"/>
-	<monster file="Nostalgia/old_bug.xml" name="BugOld"/>
-	<monster file="Nostalgia/old_giant_spider.xml" name="Giant SpiderOld"/>
-	<monster file="Nostalgia/old_pig.xml" name="PigOld"/>
-	<monster file="Nostalgia/old_spider.xml" name="SpiderOld"/>
-	<monster file="Nostalgia/old_wasp.xml" name="WaspOld"/>
-	<monster file="Nostalgia/old_wolf.xml" name="WolfOld"/>
+	<!-- Nostalgia -->
+	<monster name="BearOld" file="Nostalgia/old_bear.xml" />
+	<monster name="BonelordOld" file="Nostalgia/old_bonelord.xml" />
+	<monster name="BugOld" file="Nostalgia/old_bug.xml" />
+	<monster name="Giant SpiderOld" file="Nostalgia/old_giant_spider.xml" />
+	<monster name="PigOld" file="Nostalgia/old_pig.xml" />
+	<monster name="SpiderOld" file="Nostalgia/old_spider.xml" />
+	<monster name="WaspOld" file="Nostalgia/old_wasp.xml" />
+	<monster name="WolfOld" file="Nostalgia/old_wolf.xml" />
 
-    <!-- DAWNPORT -->		
+    	<!-- Dawnport -->		
 	<monster file="Dawnport/weakened shlorg.xml" name="Weakened Shlorg"/>
 	<monster file="Dawnport/mountain troll.xml" name="Mountain Troll"/>
 	<monster file="Dawnport/salamander trainer.xml" name="Salamander Trainer"/>
 	<monster file="Dawnport/troll marauder.xml" name="Troll Marauder"/>		
 	<monster file="Dawnport/muglex clan assassin.xml" name="Muglex Clan Assassin"/>
-    <monster file="Dawnport/muglex clan footman.xml" name="Muglex Clan Footman"/>
-    <monster file="Dawnport/muglex clan scavenger.xml" name="Muglex Clan Scavenger"/>		
+    	<monster file="Dawnport/muglex clan footman.xml" name="Muglex Clan Footman"/>
+    	<monster file="Dawnport/muglex clan scavenger.xml" name="Muglex Clan Scavenger"/>		
 	<monster file="Dawnport/troll-trained salamander.xml" name="Troll-Trained Salamander"/>	    
-    <monster file="Dawnport/brittle skeleton.xml" name="Brittle Skeleton"/>
+    	<monster file="Dawnport/brittle skeleton.xml" name="Brittle Skeleton"/>
 	<monster file="Dawnport/dawnfly.xml" name="Dawnfly"/>   
-    <monster file="Dawnport/spidris elitesumom.xml" name="Spidris Elite Sumom"/> 		
-    <monster file="Dawnport/woodling.xml" name="Woodling"/>
+   	<monster file="Dawnport/spidris elitesumom.xml" name="Spidris Elite Sumom"/> 		
+   	<monster file="Dawnport/woodling.xml" name="Woodling"/>
 	<monster file="Dawnport/dawn scorpion.xml" name="Dawn Scorpion"/>
 	<monster file="Dawnport/scar tribe shaman.xml" name="Scar Tribe Shaman"/>
-    <monster file="Dawnport/scar tribe warrior.xml" name="Scar Tribe Warrior"/>
+ 	<monster file="Dawnport/scar tribe warrior.xml" name="Scar Tribe Warrior"/>
 	<monster file="Dawnport/crazed dwarf.xml" name="Crazed Dwarf"/>
 	<monster file="Dawnport/meadow strider.xml" name="Meadow Strider"/>
 	<monster file="Dawnport/lesser fire devil.xml" name="Lesser Fire Devil"/>
@@ -33,7 +33,7 @@
 
 	<!-- Customs -->
 	<monster name="Trailemaw" file="Customs/trailemaw.xml" />
-    <monster name="Training Monk" file="Customs/Training Monk.xml" />
+    	<monster name="Training Monk" file="Customs/Training Monk.xml" />
 
 	<!-- VOCATION SUMMONS LV 200+ -->
 	<monster name="Emberwing" file="Summons/Emberwing.xml" />
@@ -881,6 +881,9 @@
 	<monster name="Orc" file="Orcs/orc.xml" />
 	<monster name="Orc Marauder" file="Orcs/orc_marauder.xml" />
 	<monster name="Rorc" file="Orcs/rorc.xml" />
+	<monster name="Orcarmor" file="Orcs/orcarmor.xml" />
+	<monster name="Orchelmet" file="Orcs/orchelmet.xml" />
+	<monster name="Orcshield" file="Orcs/orcshield.xml" />
 
 	<!-- Outlaws -->
 	<monster name="Adventurer" file="Outlaws/adventurer.xml" />
