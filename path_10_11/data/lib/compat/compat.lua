@@ -109,7 +109,7 @@ function pushThing(thing)
 end
 
 createCombatObject = Combat
-addCombatCondition = Combat.setCondition
+addCombatCondition = Combat.addCondition
 setCombatArea = Combat.setArea
 setCombatCallback = Combat.setCallback
 setCombatFormula = Combat.setFormula
