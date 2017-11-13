@@ -1,8 +1,13 @@
 dofile('data/lib/libs.lua')
 
+NOT_MOVEABLE_ACTION = 8000
+PARTY_PROTECTION = 1 -- Set to 0 to disable.
+ADVANCED_SECURE_MODE = 1 -- Set to 0 to disable.
+
 STORAGEVALUE_PROMOTION = 30018
 
-ropeSpots = {384, 418, 8278, 8592, 13189, 14435, 14436, 15635, 19518}
+
+ropeSpots = {384, 418, 8278, 8592, 13189, 14435, 14436, 15635, 19518, 26019, 24621, 24622, 24623, 24624}
 
 doors = {
 	[1209] = 1211, [1210] = 1211, [1212] = 1214, [1213] = 1214, [1219] = 1220, [1221] = 1222, [1231] = 1233, [1232] = 1233, [1234] = 1236,
@@ -64,17 +69,59 @@ levelDoors = {
 
 keys = {2086, 2087, 2088, 2089, 2090, 2091, 2092, 10032}
 
-function getDistanceBetween(firstPosition, secondPosition)
-	local xDif = math.abs(firstPosition.x - secondPosition.x)
-	local yDif = math.abs(firstPosition.y - secondPosition.y)
-	local posDif = math.max(xDif, yDif)
-	if firstPosition.z ~= secondPosition.z then
-		posDif = posDif + 15
+--[ Impact Analyser ]--
+updateInterval = 2 --every 2 seconds
+-- Healing
+healingImpact = {} -- global table to insert data
+-- Damage
+damageImpact = {} -- global table to insert data
+ 
+function doCreatureSayWithRadius(cid, text, type, radiusx, radiusy, position)
+	if not position then
+		position = Creature(cid):getPosition()
 	end
-	return posDif
+
+	local spectators, spectator = Game.getSpectators(position, false, true, radiusx, radiusx, radiusy, radiusy)
+	for i = 1, #spectators do
+		spectator = spectators[i]
+		spectator:say(text, type, false, spectator, position)
+	end
 end
 
-function getFormattedWorldTime()
+
+function getBlessingsCost(level)
+	if level <= 30 then
+		return 2000
+	elseif level >= 120 then
+		return 20000
+	else
+		return (level - 20) * 200
+	end
+end
+
+function getPvpBlessingCost(level)
+	if level <= 30 then
+		return 2000
+	elseif level >= 270 then
+		return 50000
+	else
+		return (level - 20) * 200
+	end
+end
+
+function isInRange(pos, fromPos, toPos)
+	return pos.x >= fromPos.x and pos.y >= fromPos.y and pos.z >= fromPos.z and pos.x <= toPos.x and pos.y <= toPos.y and pos.z <= toPos.z
+end
+
+function isNumber(str)
+	return tonumber(str) ~= nil
+end
+
+function Creature.getMonster(self)
+return self:isMonster() and self or nil
+end
+
+function getTibianTime()
 	local worldTime = getWorldTime()
 	local hours = math.floor(worldTime / 60)
 
@@ -83,6 +130,16 @@ function getFormattedWorldTime()
 		minutes = '0' .. minutes
 	end
 	return hours .. ':' .. minutes
+end
+
+function getDistanceBetween(firstPosition, secondPosition)
+	local xDif = math.abs(firstPosition.x - secondPosition.x)
+	local yDif = math.abs(firstPosition.y - secondPosition.y)
+	local posDif = math.max(xDif, yDif)
+	if firstPosition.z ~= secondPosition.z then
+		posDif = posDif + 15
+	end
+	return posDif
 end
 
 table.contains = function(array, value)
@@ -106,20 +163,21 @@ string.trim = function(str)
 	return str:match'^()%s*$' and '' or str:match'^%s*(.*%S)'
 end
 
+-- Stamina
 if nextUseStaminaTime == nil then
-	nextUseStaminaTime = {}
+    nextUseStaminaTime = {}
 end
 
 if nextUseStaminaPrey == nil then
-	nextUseStaminaPrey = {}
+    nextUseStaminaPrey = {}
 end
 
 if nextUseXpStamina == nil then
-	nextUseXpStamina = {}
+    nextUseXpStamina = {}
 end
 
 if lastItemImbuing == nil then
-	lastItemImbuing = {}
+    lastItemImbuing = {}
 end
 
 --Boss entry
@@ -146,4 +204,70 @@ if not bosssPlayers then
 			return c
 		end
 	}
+end
+
+-- CASAMENTO MARRY 
+
+PROPOSED_STATUS = 1
+MARRIED_STATUS = 2
+PROPACCEPT_STATUS = 3
+LOOK_MARRIAGE_DESCR = TRUE
+ITEM_WEDDING_RING = 2121
+ITEM_ENGRAVED_WEDDING_RING = 10502
+
+function getPlayerSpouse(id)
+    local resultQuery = db.storeQuery("SELECT `marriage_spouse` FROM `players` WHERE `id` = " .. db.escapeString(id))
+    if resultQuery ~= false then
+        local ret = result.getDataInt(resultQuery, "marriage_spouse")
+        result.free(resultQuery)
+        return ret
+    end
+    return -1
+end
+
+function setPlayerSpouse(id, val)
+    db.query("UPDATE `players` SET `marriage_spouse` = " .. val .. " WHERE `id` = " .. id)
+end
+
+function getPlayerMarriageStatus(id)
+    local resultQuery = db.storeQuery("SELECT `marriage_status` FROM `players` WHERE `id` = " .. db.escapeString(id))
+    if resultQuery ~= false then
+        local ret = result.getDataInt(resultQuery, "marriage_status")
+        result.free(resultQuery)
+        return ret
+    end
+    return -1
+end
+
+function setPlayerMarriageStatus(id, val)
+    db.query("UPDATE `players` SET `marriage_status` = " .. val .. " WHERE `id` = " .. id)
+end
+
+function Player:getMarriageDescription(thing)
+    local descr = ""
+    if getPlayerMarriageStatus(thing:getGuid()) == MARRIED_STATUS then
+        playerSpouse = getPlayerSpouse(thing:getGuid())
+        if self == thing then
+            descr = descr .. " You are "
+        elseif thing:getSex() == PLAYERSEX_FEMALE then
+            descr = descr .. " She is "
+        else
+            descr = descr .. " He is "
+        end
+        descr = descr .. "married to " .. getPlayerNameById(playerSpouse) .. '.'
+    end
+    return descr
+end
+
+-- The following 2 functions can be used for delayed shouted text
+
+function say(param)
+selfSay(text)
+doCreatureSay(param.cid, param.text, 1)
+end
+
+function delayedSay(text, delay)
+local delay = delay or 0
+local cid = getNpcCid()
+addEvent(say, delay, {cid = cid, text = text})
 end
