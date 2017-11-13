@@ -506,10 +506,6 @@ void Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 		return;
 	}
 
-	if ((damage.primary.value < 0 || damage.secondary.value < 0) && caster) {
-		Player* targetPlayer = target->getPlayer();
-	}
-
 	if (caster) {
 		Player* casterPlayer = caster->getPlayer();
 		if (casterPlayer) {
