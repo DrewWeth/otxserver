@@ -78,6 +78,7 @@ CombatDamage Combat::getCombatDamage(Creature* creature, Creature* target) const
 					);
 				}
 			}
+			damage.primary.value = damage.primary.value * 2.0;
 		}
 	}
 	return damage;
