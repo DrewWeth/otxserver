@@ -78,7 +78,6 @@ CombatDamage Combat::getCombatDamage(Creature* creature, Creature* target) const
 					);
 				}
 			}
-			damage.primary.value = damage.primary.value * 2.0;
 		}
 	}
 	return damage;
@@ -509,10 +508,6 @@ void Combat::CombatHealthFunc(Creature* caster, Creature* target, const CombatPa
 
 	if ((damage.primary.value < 0 || damage.secondary.value < 0) && caster) {
 		Player* targetPlayer = target->getPlayer();
-		if (targetPlayer && caster->getPlayer() && targetPlayer->getSkull() != SKULL_BLACK) {
-			damage.primary.value /= 2;
-			damage.secondary.value /= 2;
-		}
 	}
 
 	if (caster) {
