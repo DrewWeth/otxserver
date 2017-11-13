@@ -7,7 +7,7 @@ function onSay(player, words, param)
 	if param == '' then
 		target = player:getTarget()
 		if not target then
-			player:sendTextMessage(MESSAGE_STATUS_CONSOLE_BLUE, 'Unlocks all mounts for certain player. Usage: /mounts <player name>')
+			player:sendTextMessage(MESSAGE_EVENT_ADVANCE, 'Unlocks all mounts for certain player. Usage: /mounts <player name>')
 			return false
 		end
 	else
@@ -15,20 +15,20 @@ function onSay(player, words, param)
 	end
 
 	if not target then
-		player:sendTextMessage(MESSAGE_STATUS_CONSOLE_BLUE, 'Player ' .. param .. ' is not currently online.')
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, 'Player ' .. param .. ' is not currently online.')
 		return false
 	end
 
-	if player:getAccountType() < ACCOUNT_TYPE_GOD  then
-		player:sendTextMessage(MESSAGE_STATUS_CONSOLE_BLUE, 'Cannot perform action.')
+	if target:getAccountType() > player:getAccountType() then
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, 'Cannot perform action.')
 		return false
 	end
 
-	for i = 1, 90 do
+	for i = 1, 47 do
 		target:addMount(i)
 	end
 
-	player:sendTextMessage(MESSAGE_STATUS_CONSOLE_BLUE, 'All mounts unlocked for: ' .. target:getName())
-	target:sendTextMessage(MESSAGE_STATUS_CONSOLE_BLUE, '[Server] All mounts unlocked.')
+	player:sendTextMessage(MESSAGE_EVENT_ADVANCE, 'All mounts unlocked for: ' .. target:getName())
+	target:sendTextMessage(MESSAGE_EVENT_ADVANCE, '[Server] All mounts unlocked.')
 	return false
 end

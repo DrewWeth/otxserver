@@ -65,7 +65,11 @@ end
 function Player:onLook(thing, position, distance)
 	local description = 'You see '
 	if thing:isItem() then
-		if thing.itemid >= ITEM_HEALTH_CASK_START and thing.itemid <= ITEM_HEALTH_CASK_END 
+		if thing.actionid == 5640 then
+			description = description .. 'a honeyflower patch.'
+		elseif thing.actionid == 5641 then
+			description = description .. 'a banana palm.'
+		elseif thing.itemid >= ITEM_HEALTH_CASK_START and thing.itemid <= ITEM_HEALTH_CASK_END 
 		or thing.itemid >= ITEM_MANA_CASK_START and thing.itemid <= ITEM_MANA_CASK_END 
 		or thing.itemid >= ITEM_SPIRIT_CASK_START and thing.itemid <= ITEM_SPIRIT_CASK_END 
 		or thing.itemid >= ITEM_KEG_START and thing.itemid <= ITEM_KEG_END then
@@ -238,6 +242,84 @@ local function antiPush(self, item, count, fromPosition, toPosition, fromCylinde
 end
 
 function Player:onMoveItem(item, count, fromPosition, toPosition, fromCylinder, toCylinder)
+	--- LIONS ROCK START 
+	if self:getStorageValue(lionrock.storages.playerCanDoTasks) - os.time() < 0 then
+		local p, i = lionrock.positions, lionrock.items
+		local checkPr = false
+		if item:getId() == lionrock.items.ruby and toPosition.x == p.ruby.x and toPosition.y == p.ruby.y  and toPosition.z == p.ruby.z then
+			-- Ruby
+			self:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You place the ruby on the small socket. A red flame begins to burn.")
+				checkPr = true
+			if lionrock.taskactive.ruby ~= true then
+				lionrock.taskactive.ruby = true
+			end
+
+			local tile = Tile(p.ruby)
+			if tile:getItemCountById(i.redflame) < 1 then
+				Game.createItem(i.redflame, 1, p.ruby)
+			end
+		end
+
+		if item:getId() == lionrock.items.sapphire and toPosition.x == p.sapphire.x and toPosition.y == p.sapphire.y  and toPosition.z == p.sapphire.z then
+			-- Sapphire
+			self:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You place the sapphire on the small socket. A blue flame begins to burn.")
+				checkPr = true
+			if lionrock.taskactive.sapphire ~= true then
+				lionrock.taskactive.sapphire = true
+			end
+
+			local tile = Tile(p.sapphire)
+			if tile:getItemCountById(i.blueflame) < 1 then
+				Game.createItem(i.blueflame, 1, p.sapphire)
+			end
+		end
+
+		if item:getId() == lionrock.items.amethyst and toPosition.x == p.amethyst.x and toPosition.y == p.amethyst.y  and toPosition.z == p.amethyst.z then
+			-- Amethyst
+			self:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You place the topaz on the small socket. A yellow flame begins to burn.")
+				checkPr = true
+			if lionrock.taskactive.amethyst ~= true then
+				lionrock.taskactive.amethyst = true
+			end
+
+			local tile = Tile(p.amethyst)
+			if tile:getItemCountById(i.yellowflame) < 1 then
+				Game.createItem(i.yellowflame, 1, p.amethyst)
+			end
+		end
+
+		if item:getId() == lionrock.items.topaz and toPosition.x == p.topaz.x and toPosition.y == p.topaz.y  and toPosition.z == p.topaz.z then
+			-- Topaz
+			self:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You place the amethyst on the small socket. A violet flame begins to burn.")
+				checkPr = true
+			if lionrock.taskactive.topaz ~= true then
+				lionrock.taskactive.topaz = true
+			end
+
+			local tile = Tile(p.topaz)
+			if tile:getItemCountById(i.violetflame) < 1 then
+				Game.createItem(i.violetflame, 1, p.topaz)
+			end
+		end
+
+		if checkPr == true then
+			-- Adding the Fountain which gives present
+			if lionrock.taskactive.ruby == true and lionrock.taskactive.sapphire == true and lionrock.taskactive.amethyst == true and lionrock.taskactive.topaz == true then
+				local fountain = Game.createItem(i.rewardfountain, 1, { x=33073, y=32300, z=9})
+				fountain:setActionId(41357)
+				local stone = Tile({ x=33073, y=32300, z=9}):getItemById(3608)
+				if stone ~= nil then
+					stone:remove()
+				end
+				self:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Something happens at the centre of the room ...");
+			end
+
+			-- Removing Item
+			item:remove(1)
+		end
+	end
+	---- LIONS ROCK END
+
 	-- SSA exhaust
 	local exhaust = { }
 	if toPosition.x == CONTAINER_POSITION and toPosition.y == CONST_SLOT_NECKLACE and item:getId() == STONE_SKIN_AMULET then

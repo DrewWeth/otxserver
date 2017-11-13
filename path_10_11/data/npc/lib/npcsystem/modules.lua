@@ -86,8 +86,7 @@ if Modules == nil then
 		return true
 	end
 
-	--Usage:
-		-- local node1 = keywordHandler:addKeyword({"promot"}, StdModule.say, {npcHandler = npcHandler, text = "I can promote you for 20000 gold coins. Do you want me to promote you?"})
+	-- local node1 = keywordHandler:addKeyword({"promot"}, StdModule.say, {npcHandler = npcHandler, text = "I can promote you for 20000 gold coins. Do you want me to promote you?"})
 		-- node1:addChildKeyword({"yes"}, StdModule.promotePlayer, {npcHandler = npcHandler, cost = 20000, level = 20}, text = "Congratulations! You are now promoted.")
 		-- node1:addChildKeyword({"no"}, StdModule.say, {npcHandler = npcHandler, text = "Allright then. Come back when you are ready."}, reset = true)
 	function StdModule.promotePlayer(cid, message, keywords, parameters, node)
@@ -101,18 +100,18 @@ if Modules == nil then
 		end
 
 		local player = Player(cid)
-		if player:isPremium() then
+		if not player:isPremium(cid) or player:isPremium(cid) then
+			local promotion = player:getVocation():getPromotion()
 			if player:getStorageValue(STORAGEVALUE_PROMOTION) == 1 then
 				npcHandler:say("You are already promoted!", cid)
 			elseif player:getLevel() < parameters.level then
 				npcHandler:say("I am sorry, but I can only promote you once you have reached level " .. parameters.level .. ".", cid)
-			elseif not player:removeMoneyNpc(parameters.cost) then
+			elseif not player:removeMoney(parameters.cost) then
 				npcHandler:say("You do not have enough money!", cid)
 			else
+				npcHandler:say(parameters.text, cid)
+				player:setVocation(promotion)
 				player:setStorageValue(STORAGEVALUE_PROMOTION, 1)
-				player:setVocation(player:getVocation():getPromotion())
-				player:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
-				npcHandler:say(parameters.text or "Congratulations! You are now promoted.", cid)
 			end
 		else
 			npcHandler:say("You need a premium account in order to get promoted.", cid)
@@ -154,23 +153,29 @@ if Modules == nil then
 			error("StdModule.bless called without any npcHandler instance.")
 		end
 
-		if not npcHandler:isFocused(cid) or getWorldType() == WORLD_TYPE_PVP_ENFORCED then
+		if not npcHandler:isFocused(cid) then
 			return false
 		end
 
 		local player = Player(cid)
-		if player:isPremium() then
-			if player:hasBlessing(parameters.bless) then
-				npcHandler:say("Gods have already blessed you with this blessing!", cid)
-			elseif not player:removeMoneyNpc(parameters.cost) then
-				npcHandler:say("You don't have enough money for blessing.", cid)
-			else
-				player:addBlessing(parameters.bless)
-				npcHandler:say("You have been blessed by one of the five gods!", cid)
-			end
+		local parseInfo = {[TAG_BLESSCOST] = getBlessingsCost(player:getLevel()), [TAG_PVPBLESSCOST] = getPvpBlessingCost(player:getLevel())}
+		if player:hasBlessing(parameters.bless) then
+			npcHandler:say("You already possess this blessing.", cid)
+		elseif parameters.bless == 4 and player:getStorageValue(Storage.KawillBlessing) ~= 1 then
+			npcHandler:say("You need the blessing of the great geomancer first.", cid)
+		elseif parameters.bless == 1 and player:getBlessings() == 0 and not player:getItemById(2173, true) then
+			npcHandler:say("You don't have any of the other blessings nor an amulet of loss, so it wouldn't make sense to bestow this protection on you now. Remember that it can only protect you from the loss of those!", cid)
+		elseif not player:removeMoneyNpc(type(parameters.cost) == "string" and npcHandler:parseMessage(parameters.cost, parseInfo) or parameters.cost) then
+			npcHandler:say("Oh. You do not have enough money.", cid)
 		else
-			npcHandler:say("You need a premium account in order to be blessed.", cid)
+			npcHandler:say(parameters.text or "You have been blessed by one of the five gods!", cid)
+			if parameters.bless == 4 then
+				player:setStorageValue(Storage.KawillBlessing, 0)
+			end
+			player:addBlessing(parameters.bless, 1)
+			player:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
 		end
+
 		npcHandler:resetNpc(cid)
 		return true
 	end
@@ -198,8 +203,9 @@ if Modules == nil then
 		else
 			cost = 0
 		end
-
+		
 		local exhausts
+		
 		if parameters.premium and not player:isPremium() then
 			npcHandler:say("I'm sorry, but you need a premium account in order to travel onboard our ships.", cid)
 		elseif parameters.level and player:getLevel() < parameters.level then
@@ -227,7 +233,15 @@ if Modules == nil then
 			setPlayerStorageValue(cid, exhausts, 3 + os.time()) 
 			player:teleportTo(destination)
 			destination:sendMagicEffect(CONST_ME_TELEPORT)
+			
+			-- What a foolish Quest - Mission 3
+			if player:getStorageValue(Storage.WhatAFoolishQuest.PieBoxTimer) > os.time() then
+				if destination ~= Position(32660, 31957, 15) then -- kazordoon steamboat
+					player:setStorageValue(Storage.WhatAFoolishQuest.PieBoxTimer, 1)
+				end
+			end
 		end
+
 		npcHandler:resetNpc(cid)
 		return true
 	end
@@ -276,6 +290,7 @@ if Modules == nil then
 		if not self.greetWords then
 			self.greetWords = {}
 		end
+
 
 		if type(message) == 'string' then
 			table.insert(self.greetWords, message)
@@ -1208,7 +1223,7 @@ if Modules == nil then
 			end
 		elseif shop_eventtype[cid] == SHOPMODULE_BUY_ITEM_CONTAINER then
 			local ret = doPlayerBuyItemContainer(cid, shop_container[cid], shop_itemid[cid], shop_amount[cid], shop_cost[cid] * shop_amount[cid], shop_subtype[cid])
-			if ret == true then
+			if ret then
 				local msg = module.npcHandler:getMessage(MESSAGE_ONBUY)
 				msg = module.npcHandler:parseMessage(msg, parseInfo)
 				module.npcHandler:say(msg, cid)

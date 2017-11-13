@@ -4,12 +4,26 @@ local muted = Condition(CONDITION_CHANNELMUTEDTICKS, CONDITIONID_DEFAULT)
 muted:setParameter(CONDITION_PARAM_SUBID, CHANNEL_HELP)
 muted:setParameter(CONDITION_PARAM_TICKS, 3600000)
 
+local exhausted = createConditionObject(CONDITION_CHANNELMUTEDTICKS)
+setConditionParam(exhausted, CONDITION_PARAM_SUBID, CHANNEL_HELP)
+setConditionParam(exhausted, CONDITION_PARAM_TICKS, 30000)
+
 function onSpeak(player, type, message)
 	local playerAccountType = player:getAccountType()
-	if player:getLevel() == 1 and playerAccountType == ACCOUNT_TYPE_NORMAL then
-		player:sendCancelMessage("You may not speak into channels as long as you are on level 1.")
+    if player:getLevel() <= 3 and playerAccountType == ACCOUNT_TYPE_NORMAL then
+        player:sendCancelMessage("You may not speak into channels as long as you are below level 4.")
 		return false
 	end
+
+     if(getCreatureCondition(player, CONDITION_CHANNELMUTEDTICKS, CHANNEL_HELP)) and playerAccountType == ACCOUNT_TYPE_NORMAL then
+         player:sendCancelMessage("You may only ask a question once every 30 seconds.")
+            return false
+        end
+
+    if getPlayerGroupId(player) <= 1 then
+        doAddCondition(player, exhausted)
+    end
+
 
 	if player:getCondition(CONDITION_CHANNELMUTEDTICKS, CONDITIONID_DEFAULT, CHANNEL_HELP) then
 		player:sendCancelMessage("You are muted from the Help channel for using it inappropriately.")
