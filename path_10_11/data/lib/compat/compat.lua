@@ -109,21 +109,11 @@ function pushThing(thing)
 end
 
 createCombatObject = Combat
-addCombatCondition = Combat.addCondition
 setCombatArea = Combat.setArea
 setCombatCallback = Combat.setCallback
+setCombatCondition = Combat.setCondition
 setCombatFormula = Combat.setFormula
 setCombatParam = Combat.setParameter
-
-Combat.setCondition = function(...)
-	print("[Warning] Function Combat.setCondition was renamed to Combat.addCondition and will be removed in the future")
-	Combat.addCondition(...)
-end
-
-setCombatCondition = function(...)
-	print("[Warning] Function setCombatCondition was renamed to addCombatCondition and will be removed in the future")
-	Combat.addCondition(...)
-end
 
 createConditionObject = Condition
 setConditionParam = Condition.setParameter
@@ -148,6 +138,8 @@ function getCreaturePosition(cid) local c = Creature(cid) return c ~= nil and c:
 function getCreatureOutfit(cid) local c = Creature(cid) return c ~= nil and c:getOutfit() or false end
 function getCreatureSpeed(cid) local c = Creature(cid) return c ~= nil and c:getSpeed() or false end
 function getCreatureBaseSpeed(cid) local c = Creature(cid) return c ~= nil and c:getBaseSpeed() or false end
+
+function isInArray(array, value) return table.contains(array, value) end
 
 function getCreatureTarget(cid)
 	local c = Creature(cid)
@@ -191,7 +183,6 @@ function doSetCreatureDropLoot(cid, doDrop) local c = Creature(cid) return c ~= 
 function doChangeSpeed(cid, delta) local c = Creature(cid) return c ~= nil and c:changeSpeed(delta) or false end
 function doAddCondition(cid, conditionId) local c = Creature(cid) return c ~= nil and c:addCondition(conditionId) or false end
 function doRemoveCondition(cid, conditionType, subId) local c = Creature(cid) return c ~= nil and (c:removeCondition(conditionType, CONDITIONID_COMBAT, subId) or c:removeCondition(conditionType, CONDITIONID_DEFAULT, subId) or true) end
-function getCreatureCondition(cid, type, subId) local c = Creature(cid) return c ~= nil and c:hasCondition(type, subId) or false end
 
 doSetCreatureDirection = doCreatureSetLookDir
 
@@ -547,19 +538,19 @@ function doSummonCreature(name, pos, ...)
 	local m = Game.createMonster(name, pos, ...) return m ~= nil and m:getId() or false
 end
 function doConvinceCreature(cid, target)
-	local creature = Creature(cid)
-	if creature == nil then
-		return false
-	end
-
-	local targetCreature = Creature(target)
-	if targetCreature == nil then
-		return false
-	end
-
+ 	local creature = Creature(cid)
+ 	if creature == nil then
+ 		return false
+ 	end
+ 
+ 	local targetCreature = Creature(target)
+ 	if targetCreature == nil then
+ 		return false
+ 	end
+ 
 	creature:addSummon(targetCreature)
-	return true
-end
+ 	return true
+ end
 
 function getTownId(townName) local t = Town(townName) return t ~= nil and t:getId() or false end
 function getTownName(townId) local t = Town(townId) return t ~= nil and t:getName() or false end
@@ -886,7 +877,6 @@ function getThingfromPos(pos)
 	end
 
 	local thing
-	local stackpos = pos.stackpos or 0
 	if stackpos == STACKPOS_TOP_MOVEABLE_ITEM_OR_CREATURE then
 		thing = tile:getTopCreature()
 		if thing == nil then
@@ -900,7 +890,7 @@ function getThingfromPos(pos)
 	elseif stackpos == STACKPOS_TOP_CREATURE then
 		thing = tile:getTopCreature()
 	else
-		thing = tile:getThing(stackpos)
+		thing = tile:getThing(pos.stackpos)
 	end
 	return pushThing(thing)
 end
@@ -1014,64 +1004,20 @@ end
 function Guild.addMember(self, player)
 	return player:setGuild(guild)
 end
+
 function Guild.removeMember(self, player)
 	return player:getGuild() == self and player:setGuild(nil)
 end
 
-function getPlayerInstantSpellCount(cid) local p = Player(cid) return p ~= nil and #p:getInstantSpells() end
-function getPlayerInstantSpellInfo(cid, spellId)
-	local player = Player(cid)
-	if not player then
-		return false
-	end
 
-	local spell = Spell(spellId)
-	if not spell or not player:canCast(spell) then
-		return false
-	end
+-- CASAMENTO MARRY
 
-	return spell
+function getPlayerNameById(id)
+local resultName = db.storeQuery("SELECT `name` FROM `players` WHERE `id` = " .. db.escapeString(id))
+if resultName ~= false then
+local name = result.getDataString(resultName, "name")
+result.free(resultName)
+return name
 end
-
-function doSetItemOutfit(cid, item, time) local c = Creature(cid) return c ~= nil and c:setItemOutfit(item, time) end
-function doSetMonsterOutfit(cid, name, time) local c = Creature(cid) return c ~= nil and c:setMonsterOutfit(name, time) end
-function doSetCreatureOutfit(cid, outfit, time)
-	local creature = Creature(cid)
-	if not creature then
-		return false
-	end
-
-	local condition = Condition(CONDITION_OUTFIT)
-	condition:setOutfit({
-		lookTypeEx = itemType:getId()
-	})
-	condition:setTicks(time)
-	creature:addCondition(condition)
-
-	return true
+return 0
 end
-
-function isInArray(array, value) return table.contains(array, value) end
-
-function doCreateItem(itemid, count, pos)
-	local tile = Tile(pos)
-	if not tile then
-		return false
-	end
-
-	local item = Game.createItem(itemid, count, pos)
-	if item then
-		return item:getUniqueId()
-	end
-	return false
-end
-
-function doCreateItemEx(itemid, count)
-	local item = Game.createItem(itemid, count)
-	if item then
-		return item:getUniqueId()
-	end
-	return false
-end
-
-function doMoveCreature(cid, direction) local c = Creature(cid) return c ~= nil and c:move(direction) end
