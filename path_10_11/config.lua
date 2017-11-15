@@ -31,7 +31,7 @@ maxPlayers = 0
 motd = "Welcome to The Forgotten Server!"
 onePlayerOnlinePerAccount = true
 allowClones = false
-serverName = "Forgotten"
+serverName = "creative"
 statusTimeout = 5 * 1000
 replaceKickOnLogin = true
 maxPacketsPerSecond = 25
@@ -81,9 +81,9 @@ maxMarketOffersAtATimePerPlayer = 100
 
 -- MySQL
 mysqlHost = "127.0.0.1"
-mysqlUser = "forgottenserver"
+mysqlUser = "root"
 mysqlPass = ""
-mysqlDatabase = "forgottenserver"
+mysqlDatabase = "global"
 mysqlPort = 3306
 mysqlSock = ""
 
