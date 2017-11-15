@@ -22,7 +22,7 @@ orangeSkullDuration = 7
 
 -- Connection Config
 -- NOTE: maxPlayers set to 0 means no limit
-ip = "127.0.0.1"
+ip = "creativetibia.ddns.net"
 bindOnlyGlobalAddress = false
 loginProtocolPort = 7171
 gameProtocolPort = 7172
@@ -94,7 +94,7 @@ kickIdlePlayerAfterMinutes = 15
 maxMessageBuffer = 4
 emoteSpells = false
 classicEquipmentSlots = false
-allowWalkthrough = true
+allowWalkthrough = false
 coinPacketSize = 25
 coinImagesURL = "http://some.url/images/store/"
 classicAttackSpeed = false
