@@ -22,16 +22,16 @@ orangeSkullDuration = 7
 
 -- Connection Config
 -- NOTE: maxPlayers set to 0 means no limit
-ip = "creativetibia.ddns.net"
+ip = "creativetibia.com"
 bindOnlyGlobalAddress = false
 loginProtocolPort = 7171
 gameProtocolPort = 7172
 statusProtocolPort = 7171
 maxPlayers = 0
-motd = "Welcome to The Forgotten Server!"
+motd = "Welcome to Creative Tibia!"
 onePlayerOnlinePerAccount = true
 allowClones = false
-serverName = "creative"
+serverName = "Creative"
 statusTimeout = 5 * 1000
 replaceKickOnLogin = true
 maxPacketsPerSecond = 25
