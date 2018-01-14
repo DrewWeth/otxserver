@@ -1,4 +1,4 @@
-local gmOutfit = {lookType = 75, lookHead = 10, lookLegs = 10, lookBody = 10, lookFeet = 10, lookAddons = 0}
+local gmOutfit = {lookType = 75}
 local groupIdStorageValue = 17293
 local outfitStorageValue = 17294
 
@@ -16,7 +16,7 @@ function onSay(cid, words, param)
 
 	if not isGmMode then
 		setPlayerStorageValue(cid, groupIdStorageValue, playerGroupId)
-		setPlayerStorageValue(cid, outfitStorageValue, getCreatureOutfit(cid)->lookType)
+		setPlayerStorageValue(cid, outfitStorageValue, getCreatureOutfit(cid).lookType)
 		doCreatureChangeOutfit(cid, gmOutfit)
 		setPlayerGroupId(cid, 0)
 		player:sendTextMessage(MESSAGE_INFO_DESCR, "You are infused with the power of GM mode.")
