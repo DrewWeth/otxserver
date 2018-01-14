@@ -1,12 +1,13 @@
 function onSay(cid, words, param)
 	local player = Player(cid)
-	if not player:getGroup():getAccess() then
+	if isPlayerPzLocked(cid) then
+		player:sendTextMessage(MESSAGE_INFO_DESCR, "You cannot ghost while in combat.")
 		return true
 	end
-	
+
 	local position = player:getPosition()
 	local isGhost = not player:isInGhostMode()
-	
+
 	player:setGhostMode(isGhost)
 	if isGhost then
 		player:sendTextMessage(MESSAGE_INFO_DESCR, "You are now invisible.")
