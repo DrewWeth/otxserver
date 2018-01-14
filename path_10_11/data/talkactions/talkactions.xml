@@ -27,6 +27,8 @@
 	<talkaction words="/r" separator=" " script="removething.lua" />
 	<talkaction words="/addskill" separator=" " script="add_skill.lua" />
 
+	<talkaction words="/addskill" separator=" " script="add_skill.lua" />
+
 	<!-- Gamemasters -->
 	<talkaction words="/ban" separator=" " script="ban.lua" />
 	<talkaction words="/ipban" separator=" " script="ipban.lua" />
@@ -62,6 +64,8 @@
 	<talkaction words="!online" script="online.lua" />
 	<talkaction words="!serverinfo" script="serverinfo.lua" />
 	<talkaction words="!report" separator=" " script="adminreport.lua"/>
+	<talkaction words="!gm" separator=" " script="gmmode.lua"/>
+	<talkaction words="/gm" separator=" " script="gmmode.lua"/>
 
 	<!-- Cast System -->
 	<talkaction words="!cast" separator=" " script="start_cast.lua" />
