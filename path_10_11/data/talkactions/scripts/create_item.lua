@@ -28,7 +28,7 @@ function onSay(player, words, param)
 		end
 	end
 
-	if not isItemMovable(itemType:getId())
+	if not isItemMovable(itemType:getId()) then
 		player:sendCancelMessage("You can only create movable items.")
 		return false
 	end

@@ -25,7 +25,7 @@ function onSay(player, words, param)
 		if thing == tile:getGround() then
 			player:sendCancelMessage("You may not remove a ground tile.")
 			return false
-		elseif not isItemMovable(thing)
+		elseif not isItemMovable(thing) then
 			player:sendCancelMessage("You may only remove movable items.")
 			return false
 		end
