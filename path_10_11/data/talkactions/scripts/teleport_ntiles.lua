@@ -1,6 +1,5 @@
 function onSay(player, words, param)
 	local isGmMode = player:getGroup():getId() == 0
-	player:sendTextMessage(MESSAGE_INFO_DESCR, string.format("groupId: %s", isGmMode))
 	if not player:getGroup():getAccess() and not isGmMode then
 		return true
 	end
