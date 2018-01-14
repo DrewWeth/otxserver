@@ -1,5 +1,6 @@
 local gmOutfit = {lookType = 75, lookHead = 10, lookLegs = 10, lookBody = 10, lookFeet = 10, lookAddons = 0}
 local groupIdStorageValue = 17293
+local outfitStorageValue = 17294
 
 function onSay(cid, words, param)
 	local player = Player(cid)
@@ -20,6 +21,7 @@ function onSay(cid, words, param)
 		position:sendMagicEffect(7)
 	else
 		setPlayerGroupId(cid, getPlayerStorageValue(cid, groupIdStorageValue))
+		doCreatureChangeOutfit(cid, gmOutfit)
 		player:sendTextMessage(MESSAGE_INFO_DESCR, "You feel normal again.")
 		position:sendMagicEffect(67)
 	end
