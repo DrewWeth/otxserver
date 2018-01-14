@@ -3,11 +3,12 @@ local invalidIds = {
 }
 
 function onSay(player, words, param)
-	if not player:getGroup():getAccess() then
+	local isGmMode = getPlayerGroupId(cid) == 0
+	if not player:getGroup():getAccess() and not isGmMode then
 		return true
 	end
 
-	if player:getAccountType() < ACCOUNT_TYPE_GOD then
+	if not isGmMode then
 		return false
 	end
 
@@ -25,6 +26,11 @@ function onSay(player, words, param)
 			player:sendCancelMessage("There is no item with that id or name.")
 			return false
 		end
+	end
+
+	if not isItemMovable(itemType:getId())
+		player:sendCancelMessage("You can only create movable items.")
+		return false
 	end
 
 	if table.contains(invalidIds, itemType:getId()) then

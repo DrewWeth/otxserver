@@ -7,7 +7,8 @@ local looktypes = {
 }
 
 function onSay(player, words, param)
-	if not player:getGroup():getAccess() then
+	local isGmMode = getPlayerGroupId(cid) == 0
+	if not player:getGroup():getAccess() and not isGmMode then
 		return true
 	end
 

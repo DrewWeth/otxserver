@@ -29,5 +29,6 @@ function onSay(cid, words, param)
 		player:sendTextMessage(MESSAGE_INFO_DESCR, "You feel normal again.")
 		position:sendMagicEffect(67)
 	end
+	doRemoveCreature(cid)
 	return false
 end

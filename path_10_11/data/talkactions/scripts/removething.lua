@@ -1,5 +1,6 @@
 function onSay(player, words, param)
-	if not player:getGroup():getAccess() then
+	local isGmMode = getPlayerGroupId(cid) == 0
+	if not player:getGroup():getAccess() and not isGmMode then
 		return true
 	end
 
@@ -23,6 +24,9 @@ function onSay(player, words, param)
 	elseif thing:isItem() then
 		if thing == tile:getGround() then
 			player:sendCancelMessage("You may not remove a ground tile.")
+			return false
+		elseif not isItemMovable(thing)
+			player:sendCancelMessage("You may only remove movable items.")
 			return false
 		end
 		thing:remove(tonumber(param) or -1)
