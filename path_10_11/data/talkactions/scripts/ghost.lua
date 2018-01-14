@@ -1,8 +1,10 @@
 function onSay(cid, words, param)
 	local player = Player(cid)
-	if player:getCondition(CONDITION_INFIGHT) then
+	
+	player:sendTextMessage(MESSAGE_INFO_DESCR, string.format("Value: %s", player:hasCondition(CONDITION_INFIGHT)))
+	if ((player:hasCondition(CONDITION_INFIGHT) and not Tile(player:getPosition()):hasFlag(TILESTATE_PROTECTIONZONE)) or isPlayerPzLocked(cid)) then
 		player:sendTextMessage(MESSAGE_INFO_DESCR, "You cannot ghost while in combat.")
-		return true
+		return false
 	end
 
 	local position = player:getPosition()
