@@ -16,14 +16,16 @@ function onSay(cid, words, param)
 
 	if not isGmMode then
 		setPlayerStorageValue(cid, groupIdStorageValue, playerGroupId)
-		setPlayerStorageValue(cid, outfitStorageValue, getCreatureOutfit(cid).lookType)
+		local currentLooktype = getCreatureOutfit(cid).lookType
+		setPlayerStorageValue(cid, outfitStorageValue, currentLooktype)
 		doCreatureChangeOutfit(cid, gmOutfit)
 		setPlayerGroupId(cid, 0)
 		player:sendTextMessage(MESSAGE_INFO_DESCR, "You are infused with the power of GM mode.")
 		position:sendMagicEffect(7)
 	else
 		setPlayerGroupId(cid, getPlayerStorageValue(cid, groupIdStorageValue))
-		doCreatureChangeOutfit(cid, {lookType = getPlayerStorageValue(cid, outfitStorageValue)})
+		local oldLookType = getPlayerStorageValue(cid, outfitStorageValue)
+		doCreatureChangeOutfit(cid, {lookType = oldLookType})
 		player:sendTextMessage(MESSAGE_INFO_DESCR, "You feel normal again.")
 		position:sendMagicEffect(67)
 	end
