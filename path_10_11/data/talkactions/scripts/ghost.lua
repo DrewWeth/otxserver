@@ -1,6 +1,6 @@
 function onSay(cid, words, param)
 	local player = Player(cid)
-	if isPlayerPzLocked(cid) then
+	if player:getCondition(CONDITION_INFIGHT) then
 		player:sendTextMessage(MESSAGE_INFO_DESCR, "You cannot ghost while in combat.")
 		return true
 	end
