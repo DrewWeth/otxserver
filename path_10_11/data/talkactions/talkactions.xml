@@ -36,7 +36,10 @@
 	<talkaction words="/kick" separator=" " script="kick.lua" />
 	<talkaction words="/B" separator=" " script="broadcast.lua" />
 	<talkaction words="/mute" script="mute.lua" />
+	<talkaction words="/addons" separator=" " script="alladdons.lua" />
+	<talkaction words="/mounts" separator=" " script="allmounts.lua" />
 	<talkaction words="/c" separator=" " script="teleport_creature_here.lua" />
+	
 	<!-- Player GM specific -->
 	<talkaction words="/up" script="up.lua" />
 	<talkaction words="/down" script="down.lua" />
