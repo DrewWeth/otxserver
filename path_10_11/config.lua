@@ -49,7 +49,7 @@ depotBoxes = 17
 -- GameStore
 gamestoreByModules = true
 
--- Casting System 
+-- Casting System
 enableLiveCasting = false
 liveCastPort = 7173
 
@@ -101,10 +101,10 @@ classicAttackSpeed = false
 
 -- Rates
 -- NOTE: rateExp is not used if you have enabled stages in data/XML/stages.xml
-rateExp = 5
-rateSkill = 3
-rateLoot = 2
-rateMagic = 3
+rateExp = 100
+rateSkill = 10
+rateLoot = 3
+rateMagic = 5
 rateSpawn = 1
 
 -- Monster rates
@@ -130,7 +130,7 @@ defaultPriority = "high"
 startupDatabaseOptimization = true
 
 -- Status server information
-ownerName = "Mattyx14"
-ownerEmail = "darkylive@live.com.mx"
-url = "http://darkkonia.sytes.net/"
-location = "Mexico"
+ownerName = "Zizimaza"
+ownerEmail = "dgwetherington@gmail.com"
+url = "http://drewweth.com"
+location = "USA"
