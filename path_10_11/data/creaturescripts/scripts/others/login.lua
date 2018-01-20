@@ -3,13 +3,13 @@ local events = {
     'BigfootBurdenVersperoth',
     'Razzagorn',
     'Shatterer',
-    'Zamulosh',	
+    'Zamulosh',
 	'The Hunger',
 	'The Rage',
 	'Eradicator',
 	'Eradicator1',
 	'Rupture',
-	'World Devourer',	
+	'World Devourer',
     'Tarbaz',
     'Shulgrax',
     'Ragiaz',
@@ -47,7 +47,7 @@ local events = {
     'Yielothax',
     'BossParticipation',
     'Energized Raging Mage',
-    'Raging Mage', 
+    'Raging Mage',
     'modalMD1',
 	'VibrantEgg',
     'DeathCounter',
@@ -60,32 +60,32 @@ local events = {
 	'Idle',
 	'petthink'
 }
- 
+
 local function onMovementRemoveProtection(cid, oldPosition, time)
     local player = Player(cid)
     if not player then
         return true
     end
- 
+
     local playerPosition = player:getPosition()
     if (playerPosition.x ~= oldPosition.x or playerPosition.y ~= oldPosition.y or playerPosition.z ~= oldPosition.z) or player:getTarget() then
         player:setStorageValue(Storage.combatProtectionStorage, 0)
         return true
     end
- 
-    addEvent(onMovementRemoveProtection, 1000, cid, oldPosition, time - 1) 
+
+    addEvent(onMovementRemoveProtection, 1000, cid, oldPosition, time - 1)
 end
- 
+
 function onLogin(player)
 	local loginStr = 'Welcome to ' .. configManager.getString(configKeys.SERVER_NAME) .. '!'
 	if player:getLastLoginSaved() <= 0 then
-		loginStr = loginStr .. ' Please choose your outfit.'		
+		loginStr = loginStr .. ' Please choose your outfit.'
 		player:setBankBalance(0)
 
 		if player:getSex() == 1 then
-			player:setOutfit({lookType = 128, lookHead = 78, lookBody = 106, lookLegs = 58, lookFeet = 76})		
+			player:setOutfit({lookType = 128, lookHead = 78, lookBody = 106, lookLegs = 58, lookFeet = 76})
 		else
-			player:setOutfit({lookType = 136, lookHead = 78, lookBody = 106, lookLegs = 58, lookFeet = 76})	
+			player:setOutfit({lookType = 136, lookHead = 78, lookBody = 106, lookLegs = 58, lookFeet = 76})
 		end
 
 		player:sendTutorial(1)
@@ -96,18 +96,18 @@ function onLogin(player)
 
 		loginStr = string.format('Your last visit was on %s.', os.date('%a %b %d %X %Y', player:getLastLoginSaved()))
 	end
- 
+
     player:sendTextMessage(MESSAGE_STATUS_DEFAULT, loginStr)
-   
+
     local playerId = player:getId()
-    
+
     player:loadSpecialStorage()
 
     --[[-- Maintenance mode
     if (player:getGroup():getId() < 2) then
         return false
     else
-        
+
     end--]]
 
     if (player:getGroup():getId() >= 4) then
@@ -157,7 +157,7 @@ function onLogin(player)
             -- Comandos --]]
         player:popupFYI(msg)
     end
-   
+
  	-- OPEN CHANNERLS (ABRIR CHANNELS)
 	if table.contains({"Rookgaard", "Dawnport"}, player:getTown():getName())then
 		--player:openChannel(7) -- help channel
@@ -175,13 +175,13 @@ function onLogin(player)
     if(rewards > 0) then
         player:sendTextMessage(MESSAGE_EVENT_ADVANCE, string.format("You have %d %s in your reward chest.", rewards, rewards > 1 and "rewards" or "reward"))
     end
- 
+
     -- Update player id
     local stats = player:inBossFight()
     if stats then
         stats.playerId = player:getId()
     end
- 
+
     -- fury gates
     local messageType = nil
     if (player:getClient().os == 3 or
@@ -203,14 +203,14 @@ function onLogin(player)
         player:sendTextMessage(messageType or MESSAGE_STATUS_CONSOLE_BLUE, 'Fury Gate is on Kazordoon Today.')
     end
 
-	player:sendTextMessage(messageType or MESSAGE_STATUS_CONSOLE_ORANGE, '[BUGS?] Reporte em http://www.github.com/malucooo/otxserver-new/issues')
-   
+	player:sendTextMessage(messageType or MESSAGE_STATUS_CONSOLE_ORANGE, 'Say "/gm" to enter and leave GM mode.')
+
     -- Events
     for i = 1, #events do
         player:registerEvent(events[i])
     end
- 
- 
+
+
     if player:getStorageValue(Storage.combatProtectionStorage) <= os.time() then
         player:setStorageValue(Storage.combatProtectionStorage, os.time() + 10)
         onMovementRemoveProtection(playerId, player:getPosition(), 10)
@@ -220,17 +220,17 @@ function onLogin(player)
 	local staminaMinutes = player:getStamina()
 	local Boost = player:getExpBoostStamina()
 	if staminaMinutes > 2400 and player:isPremium() and Boost > 0 then
-		player:setBaseXpGain(200) -- 200 = 1.0x, 200 = 2.0x, ... premium account		
+		player:setBaseXpGain(200) -- 200 = 1.0x, 200 = 2.0x, ... premium account
 	elseif staminaMinutes > 2400 and player:isPremium() and Boost <= 0 then
-		player:setBaseXpGain(150) -- 150 = 1.0x, 150 = 1.5x, ... premium account	
+		player:setBaseXpGain(150) -- 150 = 1.0x, 150 = 1.5x, ... premium account
 	elseif staminaMinutes <= 2400 and staminaMinutes > 840 and player:isPremium() and Boost > 0 then
 		player:setBaseXpGain(150) -- 150 = 1.5x		premium account
 	elseif staminaMinutes > 840 and Boost > 0 then
 		player:setBaseXpGain(150) -- 150 = 1.5x		free account
 	elseif staminaMinutes <= 840 and Boost > 0 then
-		player:setBaseXpGain(100) -- 50 = 0.5x	all players	
+		player:setBaseXpGain(100) -- 50 = 0.5x	all players
 	elseif staminaMinutes <= 840 then
-		player:setBaseXpGain(50) -- 50 = 0.5x	all players	
+		player:setBaseXpGain(50) -- 50 = 0.5x	all players
 	end
 
     return true
